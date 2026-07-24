@@ -4,6 +4,115 @@ Conjunto de prompts prontos pra colar no **Claude Code (VS Code)**, um por vez,
 pra evoluir o site do Resenha Cast com a pegada visual do site oficial do
 **GTA VI** (rockstargames.com/VI) — adaptada às regras do projeto.
 
+> **Duas versões neste doc:**
+> 1. **Prompt mestre fiel (abaixo)** — replica DE PERTO o site real, usando
+>    **GSAP + ScrollTrigger** via CDN, como o site oficial faz. Use este se
+>    fidelidade é a prioridade.
+> 2. **Passos granulares (mais abaixo, "Prompt 0…9")** — versão vanilla pura,
+>    sem dependência, aproximando os efeitos. Use se preferir zero libs.
+
+---
+
+## Como o site do GTA VI realmente funciona (pesquisado)
+
+Confirmado por breakdowns de design e clones open-source do site:
+
+- **Motor:** GSAP + **ScrollTrigger** + **SplitText**. É a mesma stack do site
+  oficial. Entra por **CDN** (`<script>`), então **não é build step** — continua
+  site estático.
+- **Efeitos:** seções **fixadas (pinned)** que seguram a tela enquanto o conteúdo
+  anima; **vídeo sincronizado ao scroll** (o vídeo "scrubba" conforme rola);
+  **parallax** em camadas; **image masking / clip-path reveals**; **SplitText**
+  (títulos entram letra/palavra); **timelines multi-seção**; **carrossel** animado.
+- **Conteúdo (ordem):** hero em vídeo + logo → painéis dos protagonistas
+  (Lucia/Jason) → áreas do mapa com botão "Explore" → galeria de screenshots →
+  newsletter → footer.
+- **Paleta:** degradê rosa-quente "sunset" (Vice City) + tipografia Pricedown
+  pesada. Nosso magenta/indigo/pink é o equivalente.
+
+**Teto de fidelidade honesto:** o efeito mais icônico (vídeo 4K que scrubba no
+scroll) depende de ter o vídeo — e o canal ainda não saiu. Montamos o
+**mecanismo** e usamos gradiente/still como placeholder, plugando o reel depois.
+
+**Fontes:** [UX Analysis (pklavc)](https://pklavc.com/blog/gta-vi-website-ux-analysis/) ·
+[Supercharging the GTA VI website with Motion](https://motion.dev/blog/supercharging-the-gta-vi-website-with-motion) ·
+[Clone GSAP (adrianhajdin)](https://github.com/adrianhajdin/jsm_gta_vi_landing) ·
+[Rockstar new website (RockstarINTEL)](https://rockstarintel.com/rockstar-games-launch-new-website-design-ahead-of-gta-6/)
+
+---
+
+## Prompt mestre fiel (cole este pra máxima fidelidade)
+
+```
+Você vai construir o site do Resenha Cast replicando DE PERTO a experiência do
+site oficial do GTA VI (rockstargames.com/VI). Leia o CLAUDE.md inteiro antes.
+Fidelidade é o objetivo principal deste trabalho.
+
+COMO O SITE DO GTA VI FUNCIONA (replicar isto):
+- Motor de animação: GSAP + ScrollTrigger + SplitText, carregados via CDN
+  (tags <script> — NÃO é build step, continua site estático).
+- Técnicas: seções fixadas (pinned) que seguram a tela enquanto o conteúdo anima;
+  VÍDEO SINCRONIZADO AO SCROLL (o vídeo avança conforme o scroll); parallax em
+  camadas; reveals com image masking / clip-path; SplitText (títulos entram
+  letra/palavra); timelines que atravessam várias seções; um carrossel animado.
+- Estética: tipografia condensada gigante caixa alta, degradê "sunset"
+  (aqui: magenta #C300E3 / indigo #45009D / pink #F06EC1 sobre preto),
+  grão filmico + vinheta. Disciplina: o ousado é a tipografia, o vídeo e o
+  masking; o resto fica quieto.
+
+RESTRIÇÕES DO PROJETO (não-negociáveis):
+- Site estático: HTML/CSS/JS vanilla + GSAP via CDN. Sem framework, sem build,
+  sem bundler. Roda em host estático. Não usar fetch de partials locais.
+- Todo efeito degrada com elegância: em prefers-reduced-motion e com JS/GSAP
+  indisponível, o CONTEÚDO aparece 100% legível no estado final (sem depender da
+  animação). Nada de tela em branco se o GSAP não carregar.
+- Anima só transform/opacity/clip-path. Foco de teclado visível. Imagens lazy.
+- Marca "RESENHA CAST" sempre via PNG do logo (assets/logo-resenha.png). Fonte
+  Anton (display) + Archivo (corpo). Nunca a Pricedown.
+- Sem inventar links/embeds de YouTube: onde o GTA tem trailer/vídeo, usamos
+  placeholder com o gradiente da marca e deixamos o mecanismo pronto pra plugar
+  o reel depois (TODO comentado). Copy em PT-BR.
+- Header/footer duplicados em cada página. Código em inglês, interface em PT-BR.
+
+MAPEAMENTO fiel (seção do GTA VI -> seção do Resenha):
+1. HERO em vídeo + logo + "assista o trailer"  ->  Hero: logo grande sobre o
+   gradiente animado + tagline "PODCAST SEM FILTRO. RESENHA DE VERDADE." + botão
+   "Em breve no YouTube". Um bloco de vídeo placeholder (gradiente) já com o
+   mecanismo de scroll-sync pronto pra receber o reel depois.
+2. Painéis dos protagonistas (Lucia/Jason)  ->  "O CAST": painéis pinned dos
+   apresentadores, um por vez, com SplitText no nome e reveal por masking
+   (arte placeholder com gradiente+logo até termos foto).
+3. Áreas do mapa com "Explore"  ->  "O QUE ROLA NO RESENHA": sequência pinned de
+   3-4 painéis (ex.: Resenha sem filtro / Convidados / Cortes) com masking reveal
+   e parallax.
+4. Galeria de screenshots (carrossel)  ->  "ÚLTIMOS EPISÓDIOS": carrossel/galeria
+   horizontal (GSAP ou scroll-snap) com cards estilo "loading screen do GTA"
+   (thumb grande + tarja com título e número). Placeholders "Em breve".
+5. LOJA (nossa, não tem no GTA): vitrine "Em breve" de bonés e camisetas
+   (imagem + preço + selo "Em breve", SEM checkout; TODO pro checkout).
+6. Newsletter/updates  ->  CTA de contato / "avise-me quando sair".
+7. Footer igual ao das outras páginas.
+
+MODO DE TRABALHO (Akita, um passo por vez): NÃO faça tudo de uma vez. Ordem:
+(a) subir GSAP/ScrollTrigger/SplitText por CDN + design system (grão, vinheta,
+.text-gradient, escala tipográfica, hero com gradiente animado);
+(b) SplitText + reveals base com fallback;
+(c) hero com bloco de vídeo scroll-sync (placeholder) + parallax no logo + ticker;
+(d) seção "O CAST" pinned; (e) "O que rola" pinned com masking; (f) carrossel de
+episódios; (g) Loja vitrine; (h) nav (header some/volta + overlay full-screen);
+(i) micro-interações; (j) passo final de performance/acessibilidade (reduced-
+motion em tudo, sem overflow em 320/768/1280, preload de logo e fontes).
+
+Para CADA passo: me mostre um plano curto ANTES de codar; implemente só aquele
+passo; teste no navegador (python3 -m http.server + screenshot desktop e mobile);
+resuma. Só então siga. Comece confirmando as restrições e o plano do passo (a).
+Não escreva código ainda.
+```
+
+---
+
+## Versão granular vanilla (sem libs) — passos 0 a 9
+
 ## Como usar
 
 1. Cole o **Prompt 0** primeiro (define o norte e as regras).
