@@ -97,10 +97,20 @@
       { opacity: 0, y: -40, duration: 0.2, ease: "power1.in" },
       0
     );
-    // Fundo da abertura esmaece lentamente (profundidade, sem texto).
-    tl.to(openScene, { scale: 1.1, opacity: 0.35, duration: 0.9, ease: "none" }, 0.05);
+    // A parede escurece RÁPIDO: quando a janela assume o centro, o fundo já
+    // está apagado e as luzes atrás das letras estouram no contraste.
+    tl.to(openScene, { scale: 1.06, opacity: 0.3, duration: 0.3, ease: "power1.out" }, 0.05);
+    tl.to(openScene, { scale: 1.12, opacity: 0.12, duration: 0.5, ease: "none" }, 0.4);
     // Fase 2 (0.1–0.4): a janela-logo surge e assume o centro.
     tl.to(zoom, { s: 1, duration: 0.3, ease: "power1.inOut", onUpdate: applyZoom }, 0.1);
+    // Parallax do mundo atrás da janela (mesmos valores nas duas cópias de
+    // .night-lights => o crossfade final continua invisível).
+    tl.fromTo(
+      stage.querySelectorAll(".night-lights"),
+      { y: 60 },
+      { y: -60, duration: 0.9, ease: "none" },
+      0.1
+    );
     // Fase 3 (0.4–0.85): mergulho através das letras rumo à luz da Cena 2.
     tl.to(zoom, { s: 70, duration: 0.45, ease: "power2.in", onUpdate: applyZoom }, 0.4);
     // Fase 4 (0.8–1): Cena 2 real entra por cima; fundo idêntico ao da camada
