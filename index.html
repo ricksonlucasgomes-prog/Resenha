@@ -84,80 +84,66 @@
             </div>
           </div>
 
-          <!-- CENA 2 — O REEL (destino da transição) -->
-          <section class="scene scene--reel" id="scene-reel" aria-label="O reel">
+          <!-- CENA 2 — EPISÓDIO EM DESTAQUE (destino da transição)
+               O mergulho pelas letras desemboca direto no conteúdo de podcast,
+               não num placeholder: o scroll investido entrega o player. -->
+          <section
+            class="scene scene--reel"
+            id="scene-reel"
+            aria-label="Episódio em destaque"
+          >
             <div class="night-lights" aria-hidden="true"></div>
             <div class="reel__inner">
-              <span class="reel__eyebrow">O melhor do papo</span>
-              <h2 class="reel__title">Reel <em class="text-gradient">em breve</em></h2>
-              <p class="reel__note">
-                Quando o canal for ao ar, este espaço vira o reel sincronizado
-                ao scroll — o vídeo avança conforme você rola.
-              </p>
-              <!-- TODO(reel): plugar aqui o vídeo com scrub quando o canal sair. -->
+              <h2 class="reel__eyebrow">Episódio em destaque</h2>
+
+              <article class="featured-ep featured-ep--stage">
+                <div class="featured-ep__art" aria-hidden="true">
+                  <img src="assets/logo-resenha.png" alt="" />
+                </div>
+                <div class="featured-ep__body">
+                  <span class="featured-ep__num">Episódio 01 · Em breve</span>
+                  <h3 class="featured-ep__title">O primeiro papo tá vindo</h3>
+                  <p class="featured-ep__desc">
+                    Assim que o canal for ao ar, o episódio de estreia toca
+                    aqui. Segue a gente pra não perder a resenha.
+                  </p>
+
+                  <!-- Player: preview da cara final. Play desativado enquanto
+                       não há áudio (o canal ainda não saiu). -->
+                  <div class="player">
+                    <button
+                      class="play-btn"
+                      type="button"
+                      aria-label="Reproduzir — disponível em breve"
+                      title="Disponível em breve"
+                      disabled
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </button>
+                    <div class="waveform" id="waveform" aria-hidden="true"></div>
+                    <span class="player__time">Em breve</span>
+                  </div>
+
+                  <!-- TODO: plugar o áudio/embed real e os links das
+                       plataformas quando o canal sair. -->
+                  <div class="platform-row">
+                    <span class="platform-chip platform-chip--live">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 0 0-1.8-1.8C19.3 5 12 5 12 5s-7.3 0-8.8.5A2.5 2.5 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 0 0 1.8 1.8C4.7 19 12 19 12 19s7.3 0 8.8-.5a2.5 2.5 0 0 0 1.8-1.8C23 15.2 23 12 23 12zM10 15.5V8.5L16 12z"/></svg>
+                      YouTube <em>em breve</em>
+                    </span>
+                    <span class="platform-chip">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.8-.96a.62.62 0 1 1-.28-1.21c3.83-.88 7.1-.5 9.73 1.1.3.18.39.57.21.86zm1.23-2.74a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.17a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.56 11.23 1.33.37.22.49.7.26 1.07zm.11-2.85C14.76 8.98 9.5 8.8 6.42 9.73a.93.93 0 1 1-.54-1.78c3.53-1.07 9.34-.86 13 1.31a.93.93 0 0 1-.95 1.6z"/></svg>
+                      Spotify <em>em breve</em>
+                    </span>
+                  </div>
+                </div>
+              </article>
             </div>
           </section>
         </div>
       </div>
-
-      <!-- ===== Episódio em destaque (player) ===== -->
-      <section class="section">
-        <div class="container">
-          <div class="section__head">
-            <span class="eyebrow">No ar em breve</span>
-            <h2>Episódio em destaque</h2>
-          </div>
-
-          <article class="featured-ep">
-            <div class="featured-ep__art" aria-hidden="true">
-              <img src="assets/logo-resenha.png" alt="" />
-            </div>
-            <div class="featured-ep__body">
-              <span class="featured-ep__num">Episódio 01 · Em breve</span>
-              <h3 class="featured-ep__title">O primeiro papo tá vindo</h3>
-              <p class="featured-ep__desc">
-                Assim que o canal for ao ar, o episódio de estreia toca aqui.
-                Segue a gente pra não perder a resenha.
-              </p>
-
-              <!-- Player: preview da cara final. Play desativado enquanto não
-                   há áudio (o canal ainda não saiu). Waveform é decorativa. -->
-              <div class="player">
-                <button
-                  class="play-btn"
-                  type="button"
-                  aria-label="Reproduzir — disponível em breve"
-                  title="Disponível em breve"
-                  disabled
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </button>
-                <div class="waveform" id="waveform" aria-hidden="true"></div>
-                <span class="player__time">Em breve</span>
-              </div>
-
-              <!-- TODO: quando o canal sair, plugar o áudio/embed real e os
-                   links das plataformas abaixo. -->
-              <div class="platform-row">
-                <span class="platform-chip platform-chip--live">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 0 0-1.8-1.8C19.3 5 12 5 12 5s-7.3 0-8.8.5A2.5 2.5 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 0 0 1.8 1.8C4.7 19 12 19 12 19s7.3 0 8.8-.5a2.5 2.5 0 0 0 1.8-1.8C23 15.2 23 12 23 12zM10 15.5V8.5L16 12z"/></svg>
-                  YouTube <em>em breve</em>
-                </span>
-                <span class="platform-chip">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.8-.96a.62.62 0 1 1-.28-1.21c3.83-.88 7.1-.5 9.73 1.1.3.18.39.57.21.86zm1.23-2.74a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.17a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.56 11.23 1.33.37.22.49.7.26 1.07zm.11-2.85C14.76 8.98 9.5 8.8 6.42 9.73a.93.93 0 1 1-.54-1.78c3.53-1.07 9.34-.86 13 1.31a.93.93 0 0 1-.95 1.6z"/></svg>
-                  Spotify <em>em breve</em>
-                </span>
-                <span class="platform-chip">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg>
-                  Apple Podcasts <em>em breve</em>
-                </span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
 
       <!-- ===== Últimos episódios ===== -->
       <section class="section" style="padding-top: 0">

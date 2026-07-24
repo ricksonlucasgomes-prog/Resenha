@@ -71,7 +71,10 @@
 
     // Zoom por transform apenas: o scaler cresce (a janela-logo aumenta) e o
     // inner counter-escala (1/s), mantendo o fundo parado. GPU only.
-    var zoom = { s: 0.001 };
+    // Começa perto do tamanho do logo do hero (não de um ponto): a janela
+    // parece CONTINUAR o logo que acabou de sair, em vez de nascer minúscula
+    // no meio de um quadro vazio.
+    var zoom = { s: 0.55 };
     var applyZoom = function () {
       scaler.style.transform = "scale(" + zoom.s + ")";
       inner.style.transform = "scale(" + 1 / zoom.s + ")";
@@ -90,19 +93,20 @@
       },
     });
 
-    // Fase 1 (0–0.2): conteúdo da Cena 1 (logo/tagline/badge) SAI primeiro.
-    tl.to(".open__hint", { opacity: 0, duration: 0.05 }, 0);
+    // Fase 1 (0–0.15): conteúdo da Cena 1 (logo/tagline/badge) SAI primeiro.
+    tl.to(".open__hint", { opacity: 0, duration: 0.04 }, 0);
     tl.to(
       ".open__inner",
-      { opacity: 0, y: -40, duration: 0.2, ease: "power1.in" },
+      { opacity: 0, y: -40, duration: 0.15, ease: "power1.in" },
       0
     );
-    // A parede escurece RÁPIDO: quando a janela assume o centro, o fundo já
-    // está apagado e as luzes atrás das letras estouram no contraste.
-    tl.to(openScene, { scale: 1.06, opacity: 0.3, duration: 0.3, ease: "power1.out" }, 0.05);
-    tl.to(openScene, { scale: 1.12, opacity: 0.12, duration: 0.5, ease: "none" }, 0.4);
-    // Fase 2 (0.1–0.4): a janela-logo surge e assume o centro.
-    tl.to(zoom, { s: 1, duration: 0.3, ease: "power1.inOut", onUpdate: applyZoom }, 0.1);
+    // A parede apaga CEDO e FUNDO (0.18 → 0.05). Antes ela seguia clara demais
+    // enquanto a janela crescia, e as letras liam como vulto roxo sobre roxo.
+    tl.to(openScene, { scale: 1.06, opacity: 0.18, duration: 0.22, ease: "power1.out" }, 0.04);
+    tl.to(openScene, { scale: 1.12, opacity: 0.05, duration: 0.35, ease: "none" }, 0.3);
+    // Fase 2 (0.06–0.32): a janela-logo surge e assume o centro mais cedo,
+    // cortando o quadro quase vazio do começo.
+    tl.to(zoom, { s: 1, duration: 0.26, ease: "power1.inOut", onUpdate: applyZoom }, 0.06);
     // Parallax do mundo atrás da janela (mesmos valores nas duas cópias de
     // .night-lights => o crossfade final continua invisível).
     tl.fromTo(
@@ -111,11 +115,14 @@
       { y: -60, duration: 0.9, ease: "none" },
       0.1
     );
-    // Fase 3 (0.4–0.85): mergulho através das letras rumo à luz da Cena 2.
-    tl.to(zoom, { s: 70, duration: 0.45, ease: "power2.in", onUpdate: applyZoom }, 0.4);
-    // Fase 4 (0.8–1): Cena 2 real entra por cima; fundo idêntico ao da camada
-    // mascarada => crossfade invisível, e o texto só fica legível aqui.
-    tl.to(reelScene, { opacity: 1, duration: 0.2, ease: "none" }, 0.8);
+    // Fase 3 (0.28–0.62): mergulho através das letras rumo à luz da Cena 2.
+    tl.to(zoom, { s: 70, duration: 0.34, ease: "power2.in", onUpdate: applyZoom }, 0.28);
+    // Fase 4 (0.58–0.72): Cena 2 entra por cima; fundo idêntico ao da camada
+    // mascarada => crossfade invisível.
+    tl.to(reelScene, { opacity: 1, duration: 0.14, ease: "none" }, 0.58);
+    // Fase 5 (0.72–1): PAUSA. Nada anima — o palco segue pinado com o card do
+    // episódio parado e legível. Sem isso o destino aparecia e já saía rolando,
+    // e o scroll investido na transição não entregava leitura nenhuma.
   }
 
   // TODO(reveals): próximo passo — IntersectionObserver/ScrollTrigger + SplitText,
