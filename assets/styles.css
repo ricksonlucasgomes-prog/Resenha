@@ -82,13 +82,41 @@ h3 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
 }
 
 p {
   margin: 0;
+}
+
+/* ---- Camada fílmica: grão + vinheta (global, estática, sobre tudo) ------- */
+/* Overlays fixos e não-interativos. Grão gerado por SVG feTurbulence embutido
+   como data-URI (sem arquivo externo → não quebra em file://). São estáticos,
+   então já respeitam prefers-reduced-motion sem tratamento extra. */
+body::before {
+  /* Vinheta: escurece sutilmente as bordas da viewport. */
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(
+    125% 125% at 50% 38%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+body::after {
+  /* Grão fílmico discreto (~5%). */
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 61;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='rc-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rc-noise)'/%3E%3C/svg%3E");
 }
 
 /* ---- Utilitários -------------------------------------------------------- */
@@ -108,6 +136,39 @@ p {
   color: var(--cast-pink);
 }
 
+/* Texto com gradiente da marca (magenta → pink). */
+.text-gradient {
+  background: linear-gradient(
+    92deg,
+    var(--magenta-light) 0%,
+    var(--cast-pink) 55%,
+    var(--cast-purple) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+/* Fallback: sem suporte a clip em texto, cai numa cor sólida (texto nunca some). */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .text-gradient {
+    color: var(--cast-pink);
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* Títulos "cartaz" (Anton condensado, bem grande). */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.display--xl {
+  font-size: clamp(3rem, 12vw, 8.5rem);
+}
+
 .section {
   padding-block: clamp(56px, 8vw, 96px);
 }
@@ -120,7 +181,7 @@ p {
 }
 
 .section__head h2 {
-  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-size: clamp(2.3rem, 6.5vw, 4.25rem);
 }
 
 /* Foco de teclado visível em toda a interface */
@@ -276,6 +337,42 @@ p {
     radial-gradient(120% 120% at -10% 115%, var(--near-black) 12%, transparent 60%),
     var(--indigo);
 }
+.hero::before {
+  /* Brilho magenta que "respira" — anima só transform/opacity (perf + regra). */
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -25%;
+  left: -12%;
+  width: 65%;
+  height: 95%;
+  background: radial-gradient(
+    circle at center,
+    rgba(211, 87, 215, 0.6) 0%,
+    rgba(211, 87, 215, 0) 62%
+  );
+  opacity: 0.8;
+  will-change: transform, opacity;
+  animation: heroGlow 24s ease-in-out infinite;
+}
+@keyframes heroGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(14%, 10%, 0) scale(1.28);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Sem movimento: o brilho fica estático (o overlay global já zera animações,
+     mas explicitamos aqui pra deixar claro o estado de repouso). */
+  .hero::before {
+    animation: none;
+  }
+}
 .hero::after {
   /* Vinheta descendo pro canto inferior-esquerdo */
   content: "";
@@ -293,7 +390,10 @@ p {
   min-height: calc(78vh - var(--header-h));
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* stretch (não flex-start) pra os textos preencherem a largura e QUEBRAREM
+     linha — com flex-start eles viram shrink-to-fit e o overflow:hidden do
+     .hero cortava a tagline/descrição no mobile. */
+  align-items: stretch;
   justify-content: center;
   gap: 26px;
   padding-block: clamp(48px, 9vw, 96px);
@@ -506,7 +606,7 @@ p {
   border-bottom: 1px solid var(--border);
 }
 .page-hero h1 {
-  font-size: clamp(2.4rem, 8vw, 4.5rem);
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
 }
 .page-hero p {
   margin-top: 16px;

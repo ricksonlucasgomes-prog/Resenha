@@ -2,7 +2,11 @@
 (function () {
   "use strict";
 
+  var root = document.documentElement;
+
+  // ==========================================================================
   // Menu mobile: abre/fecha o nav.
+  // ==========================================================================
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.getElementById("primary-nav");
 
@@ -22,7 +26,38 @@
     });
   }
 
-  // TODO(episodios): quando o canal do YouTube existir, plugar aqui a lista
-  // manual de episódios (título + thumb + link) e/ou os embeds. Por ora os
-  // cards são placeholders "Em breve".
+  // ==========================================================================
+  // Bootstrap do GSAP (progressive enhancement).
+  //
+  // Regra de ouro: o CSS renderiza tudo no estado FINAL/visível por padrão.
+  // Só quando o GSAP está presente E o usuário permite movimento é que
+  // marcamos <html class="gsap-ready"> — e só sob essa classe o CSS aplica os
+  // estados iniciais escondidos das animações (reveals etc., que entram nos
+  // próximos passos). Assim: GSAP não carregou / JS off / reduced-motion =>
+  // conteúdo inteiro visível, sem tela branca.
+  // ==========================================================================
+  var reduceMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var gsap = window.gsap;
+  var hasGsap = typeof gsap !== "undefined";
+
+  // Expõe o estado pro resto do código (passos seguintes) sem recalcular.
+  window.RC = window.RC || {};
+  window.RC.motion = hasGsap && !reduceMotion;
+  window.RC.gsap = hasGsap ? gsap : null;
+
+  if (window.RC.motion) {
+    var plugins = [];
+    if (window.ScrollTrigger) plugins.push(window.ScrollTrigger);
+    if (window.SplitText) plugins.push(window.SplitText);
+    if (plugins.length) {
+      gsap.registerPlugin.apply(gsap, plugins);
+    }
+    root.classList.add("gsap-ready");
+  }
+
+  // TODO(reveals): próximo passo — IntersectionObserver/ScrollTrigger + SplitText,
+  // sempre atrás de .gsap-ready e com o estado final como fallback.
 })();
