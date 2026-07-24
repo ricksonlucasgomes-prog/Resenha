@@ -101,10 +101,8 @@
     tl.to(openScene, { scale: 1.1, opacity: 0.35, duration: 0.9, ease: "none" }, 0.05);
     // Fase 2 (0.1–0.4): a janela-logo surge e assume o centro.
     tl.to(zoom, { s: 1, duration: 0.3, ease: "power1.inOut", onUpdate: applyZoom }, 0.1);
-    // Fase 3 (0.4–0.85): mergulho através das letras; o neon dissolve e as
-    // letras viram janela pro fundo escuro da Cena 2.
+    // Fase 3 (0.4–0.85): mergulho através das letras rumo à luz da Cena 2.
     tl.to(zoom, { s: 70, duration: 0.45, ease: "power2.in", onUpdate: applyZoom }, 0.4);
-    tl.to(".mask-reveal__art", { opacity: 0, duration: 0.18, ease: "power1.in" }, 0.45);
     // Fase 4 (0.8–1): Cena 2 real entra por cima; fundo idêntico ao da camada
     // mascarada => crossfade invisível, e o texto só fica legível aqui.
     tl.to(reelScene, { opacity: 1, duration: 0.2, ease: "none" }, 0.8);

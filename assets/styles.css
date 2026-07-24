@@ -553,14 +553,18 @@ html.gsap-ready .stage__pin .scene {
   }
 }
 
-/* ---- Cena 2: O Reel ---- */
+/* ---- Cena 2: O Reel ----
+   Núcleo luminoso central ("tela acesa no escuro"): é o que aparece ATRAVÉS
+   das letras na transição — janela com luz, não carimbo escuro. */
 .scene--reel {
   overflow: hidden;
   isolation: isolate;
   background:
+    radial-gradient(58% 52% at 50% 42%, rgba(240, 110, 193, 0.55), transparent 68%),
+    radial-gradient(42% 38% at 50% 42%, rgba(211, 87, 215, 0.85), rgba(69, 0, 157, 0.3) 62%, transparent 78%),
     radial-gradient(120% 140% at 100% 0%, rgba(195, 0, 227, 0.4), transparent 55%),
     radial-gradient(130% 140% at 0% 100%, rgba(69, 0, 157, 0.55), transparent 60%),
-    #0a070d;
+    #120a1c;
 }
 .reel__inner {
   text-align: center;
@@ -626,23 +630,11 @@ html.gsap-ready .mask-reveal {
   will-change: transform;
   /* Mesmo fundo da Cena 2 — o crossfade final fica invisível */
   background:
+    radial-gradient(58% 52% at 50% 42%, rgba(240, 110, 193, 0.55), transparent 68%),
+    radial-gradient(42% 38% at 50% 42%, rgba(211, 87, 215, 0.85), rgba(69, 0, 157, 0.3) 62%, transparent 78%),
     radial-gradient(120% 140% at 100% 0%, rgba(195, 0, 227, 0.4), transparent 55%),
     radial-gradient(130% 140% at 0% 100%, rgba(69, 0, 157, 0.55), transparent 60%),
-    #0a070d;
-}
-.mask-reveal__art {
-  /* Letras em neon da marca na fase inicial (nada de "carimbo escuro");
-     escala junto com a máscara e dissolve durante o mergulho. */
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    var(--magenta-light) 0%,
-    var(--magenta) 45%,
-    var(--cast-pink) 72%,
-    var(--cast-purple) 100%
-  );
-  will-change: opacity;
+    #120a1c;
 }
 
 /* ==========================================================================
