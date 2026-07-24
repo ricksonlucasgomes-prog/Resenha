@@ -427,6 +427,225 @@ body::after {
 }
 
 /* ==========================================================================
+   Palco cinematográfico (Home) — Cena 1 → mask-zoom pelo logo → Cena 2
+   Regra de ouro: sem html.gsap-ready (GSAP ausente, JS off ou reduced-motion)
+   as cenas são blocos empilhados de viewport inteira, 100% visíveis.
+   ========================================================================== */
+.stage {
+  position: relative;
+}
+html.gsap-ready .stage {
+  height: 300vh; /* percurso do scrub (~2 telas) */
+}
+.stage__pin {
+  position: relative;
+}
+html.gsap-ready .stage__pin {
+  height: 100vh;
+  height: 100dvh; /* dvh: barra do navegador mobile não corta a cena */
+  overflow: hidden;
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+html.gsap-ready .stage__pin .scene {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+}
+
+/* ---- Cena 1: Abertura ---- */
+.scene--open {
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 120% at 12% -5%, var(--magenta-light) 0%, transparent 42%),
+    radial-gradient(120% 130% at 102% 0%, var(--indigo) 0%, transparent 52%),
+    radial-gradient(150% 150% at 100% 105%, var(--magenta) 0%, transparent 55%),
+    radial-gradient(120% 120% at -10% 115%, var(--near-black) 12%, transparent 60%),
+    var(--indigo);
+}
+.scene--open::before {
+  /* Mesmo brilho "respirando" do design system (só transform/opacity) */
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -25%;
+  left: -12%;
+  width: 65%;
+  height: 95%;
+  background: radial-gradient(
+    circle,
+    rgba(211, 87, 215, 0.6) 0%,
+    rgba(211, 87, 215, 0) 62%
+  );
+  animation: heroGlow 24s ease-in-out infinite;
+}
+.open__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 22px;
+  padding: 24px;
+}
+.open__logo {
+  width: min(640px, 78vw);
+  filter: drop-shadow(0 22px 48px rgba(0, 0, 0, 0.5));
+}
+.open__tagline {
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: clamp(0.8rem, 2.2vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.92);
+}
+.open__badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(12, 9, 16, 0.35);
+  backdrop-filter: blur(6px);
+}
+.open__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+.open__hint::after {
+  content: "";
+  width: 2px;
+  height: 34px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--cast-pink), transparent);
+  animation: hintPulse 1.8s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(10px);
+    opacity: 0.35;
+  }
+}
+
+/* ---- Cena 2: O Reel ---- */
+.scene--reel {
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(195, 0, 227, 0.4), transparent 55%),
+    radial-gradient(130% 140% at 0% 100%, rgba(69, 0, 157, 0.55), transparent 60%),
+    #0a070d;
+}
+.reel__inner {
+  text-align: center;
+  padding: 24px;
+}
+.reel__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cast-pink);
+}
+.reel__title {
+  margin-top: 10px;
+  font-size: clamp(3.2rem, 13vw, 10rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+}
+.reel__title em {
+  font-style: normal;
+}
+.reel__note {
+  margin-top: 18px;
+  max-width: 56ch;
+  margin-inline: auto;
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+/* Camada da transição: o fundo da Cena 2 aparece através da MÁSCARA LIMPA do
+   logo (assets/logo-mask.png — só as letras, sem a sombra preta). A máscara
+   tem tamanho FIXO; quem anima é transform: o .__scaler escala pra cima e o
+   .__inner counter-escala (1/s), então o conteúdo fica parado enquanto a
+   janela-logo cresce — GPU only, nada de animar mask-size.
+   Sem .gsap-ready a camada nem renderiza (display:none). */
+.mask-reveal {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+html.gsap-ready .mask-reveal {
+  display: block;
+}
+.mask-reveal__scaler {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url("logo-mask.png");
+  mask-image: url("logo-mask.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 50% 44%;
+  mask-position: 50% 44%;
+  -webkit-mask-size: min(70vmin, 680px) auto;
+  mask-size: min(70vmin, 680px) auto;
+  transform-origin: var(--zoom-origin, 48% 41%);
+  will-change: transform;
+}
+.mask-reveal__inner {
+  position: absolute;
+  inset: 0;
+  transform-origin: var(--zoom-origin, 48% 41%);
+  will-change: transform;
+  /* Mesmo fundo da Cena 2 — o crossfade final fica invisível */
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(195, 0, 227, 0.4), transparent 55%),
+    radial-gradient(130% 140% at 0% 100%, rgba(69, 0, 157, 0.55), transparent 60%),
+    #0a070d;
+}
+.mask-reveal__art {
+  /* Letras em neon da marca na fase inicial (nada de "carimbo escuro");
+     escala junto com a máscara e dissolve durante o mergulho. */
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    var(--magenta-light) 0%,
+    var(--magenta) 45%,
+    var(--cast-pink) 72%,
+    var(--cast-purple) 100%
+  );
+  will-change: opacity;
+}
+
+/* ==========================================================================
    Cards de episódio — estilo "loading screen do GTA"
    ========================================================================== */
 .episodes-grid {

@@ -58,6 +58,58 @@
     root.classList.add("gsap-ready");
   }
 
+  // ==========================================================================
+  // Palco cinematográfico da Home: Cena 1 → mask-zoom pelo logo → Cena 2.
+  // Só roda com GSAP presente + movimento permitido + #stage na página.
+  // ==========================================================================
+  var stage = document.getElementById("stage");
+  if (window.RC.motion && window.ScrollTrigger && stage) {
+    var openScene = document.getElementById("scene-open");
+    var reelScene = document.getElementById("scene-reel");
+    var scaler = stage.querySelector(".mask-reveal__scaler");
+    var inner = stage.querySelector(".mask-reveal__inner");
+
+    // Zoom por transform apenas: o scaler cresce (a janela-logo aumenta) e o
+    // inner counter-escala (1/s), mantendo o fundo parado. GPU only.
+    var zoom = { s: 0.001 };
+    var applyZoom = function () {
+      scaler.style.transform = "scale(" + zoom.s + ")";
+      inner.style.transform = "scale(" + 1 / zoom.s + ")";
+    };
+    applyZoom();
+    // Cena 2 real começa invisível SÓ quando há animação (sem GSAP fica visível).
+    gsap.set(reelScene, { opacity: 0 });
+
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stage,
+        start: "top top",
+        end: "bottom bottom",
+        pin: "#stage-pin",
+        scrub: 0.5,
+      },
+    });
+
+    // Fase 1 (0–0.2): conteúdo da Cena 1 (logo/tagline/badge) SAI primeiro.
+    tl.to(".open__hint", { opacity: 0, duration: 0.05 }, 0);
+    tl.to(
+      ".open__inner",
+      { opacity: 0, y: -40, duration: 0.2, ease: "power1.in" },
+      0
+    );
+    // Fundo da abertura esmaece lentamente (profundidade, sem texto).
+    tl.to(openScene, { scale: 1.1, opacity: 0.35, duration: 0.9, ease: "none" }, 0.05);
+    // Fase 2 (0.1–0.4): a janela-logo surge e assume o centro.
+    tl.to(zoom, { s: 1, duration: 0.3, ease: "power1.inOut", onUpdate: applyZoom }, 0.1);
+    // Fase 3 (0.4–0.85): mergulho através das letras; o neon dissolve e as
+    // letras viram janela pro fundo escuro da Cena 2.
+    tl.to(zoom, { s: 70, duration: 0.45, ease: "power2.in", onUpdate: applyZoom }, 0.4);
+    tl.to(".mask-reveal__art", { opacity: 0, duration: 0.18, ease: "power1.in" }, 0.45);
+    // Fase 4 (0.8–1): Cena 2 real entra por cima; fundo idêntico ao da camada
+    // mascarada => crossfade invisível, e o texto só fica legível aqui.
+    tl.to(reelScene, { opacity: 1, duration: 0.2, ease: "none" }, 0.8);
+  }
+
   // TODO(reveals): próximo passo — IntersectionObserver/ScrollTrigger + SplitText,
   // sempre atrás de .gsap-ready e com o estado final como fallback.
 })();

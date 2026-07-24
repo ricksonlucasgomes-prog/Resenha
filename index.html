@@ -50,26 +50,54 @@
     </header>
 
     <main id="conteudo">
-      <!-- ===== Hero ===== -->
-      <section class="hero">
-        <div class="container hero__inner">
-          <img
-            class="hero__logo"
-            src="assets/logo-resenha.png"
-            alt="Resenha Cast"
-            width="560"
-          />
-          <p class="hero__tagline">Podcast sem filtro. Resenha de verdade.</p>
-          <p class="hero__sub">
-            Papo direto, sem roteiro engessado e sem passar pano. O Resenha Cast
-            é a conversa que rola de verdade — agora com casa própria.
-          </p>
-          <div class="hero__actions">
-            <a class="btn btn--primary" href="episodios.html">Ver episódios</a>
-            <a class="btn btn--ghost" href="contato.html">Falar com o cast</a>
+      <!-- ===== Abertura cinematográfica (Cena 1 → mask-zoom → Cena 2) =====
+           Com GSAP: o palco (.stage) pina e a Cena 2 aparece através do alpha
+           do PNG do logo (mask-image), escalando com o scroll.
+           Sem GSAP / JS off / reduced-motion: as duas cenas viram blocos
+           empilhados de 100dvh, 100% visíveis (nada depende da animação). -->
+      <div class="stage" id="stage">
+        <div class="stage__pin" id="stage-pin">
+          <!-- CENA 1 — ABERTURA -->
+          <section class="scene scene--open" id="scene-open" aria-label="Abertura">
+            <div class="open__inner">
+              <img
+                class="open__logo"
+                src="assets/logo-resenha.png"
+                alt="Resenha Cast"
+                width="640"
+              />
+              <p class="open__tagline">Podcast sem filtro. Resenha de verdade.</p>
+              <!-- Badge, não link: o canal ainda não foi publicado -->
+              <span class="open__badge">Em breve no YouTube</span>
+            </div>
+            <div class="open__hint" aria-hidden="true">Role</div>
+          </section>
+
+          <!-- Camada da transição (decorativa): o fundo da Cena 2 visto
+               através da máscara limpa do logo (assets/logo-mask.png).
+               Escala só com transform (scaler cresce, inner counter-escala). -->
+          <div class="mask-reveal" aria-hidden="true">
+            <div class="mask-reveal__scaler">
+              <div class="mask-reveal__inner"></div>
+              <!-- Preenchimento neon das letras (fase inicial); dissolve no mergulho -->
+              <div class="mask-reveal__art"></div>
+            </div>
           </div>
+
+          <!-- CENA 2 — O REEL (destino da transição) -->
+          <section class="scene scene--reel" id="scene-reel" aria-label="O reel">
+            <div class="reel__inner">
+              <span class="reel__eyebrow">O melhor do papo</span>
+              <h2 class="reel__title">Reel <em class="text-gradient">em breve</em></h2>
+              <p class="reel__note">
+                Quando o canal for ao ar, este espaço vira o reel sincronizado
+                ao scroll — o vídeo avança conforme você rola.
+              </p>
+              <!-- TODO(reel): plugar aqui o vídeo com scrub quando o canal sair. -->
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
 
       <!-- ===== Últimos episódios ===== -->
       <section class="section">
