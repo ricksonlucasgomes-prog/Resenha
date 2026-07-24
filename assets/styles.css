@@ -1171,3 +1171,101 @@ html.gsap-ready .mask-reveal {
   .featured-ep { grid-template-columns: 1fr; }
   .featured-ep__art { max-width: 240px; }
 }
+
+/* ==========================================================================
+   Identidade tipográfica — Anton (sósia legal da Pricedown do logo) em toda a
+   interface. Archivo fica só nos parágrafos longos, onde a condensada pesada
+   cansa a leitura. Pricedown real não é usada: licença comercial insegura.
+   ========================================================================== */
+
+/* Nav, botões, labels e microtexto passam a usar a display. */
+.nav a,
+.footer-links a,
+.btn,
+.eyebrow,
+.hero__tagline,
+.open__tagline,
+.open__badge,
+.open__hint,
+.reel__eyebrow,
+.listen-card__status,
+.ep-card__num,
+.ep-card__meta,
+.featured-ep__num,
+.player__time,
+.platform-chip,
+.footer-note {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+/* A Anton só tem um peso; espaçamento abre a leitura em caixa alta. */
+.nav a,
+.footer-links a,
+.btn,
+.platform-chip,
+.ep-card__meta,
+.listen-card__status {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Tamanhos recalibrados: a Anton é mais estreita e alta que a Archivo. */
+.nav a { font-size: 1.02rem; }
+.footer-links a { font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.btn { font-size: 1.05rem; letter-spacing: 0.08em; }
+.eyebrow { font-size: 0.9rem; letter-spacing: 0.24em; }
+.platform-chip { font-size: 0.95rem; }
+.platform-chip em { font-family: var(--font-display); font-size: 0.9rem; }
+.ep-card__meta { font-size: 0.88rem; letter-spacing: 0.05em; }
+.ep-card__num { font-size: 0.85rem; letter-spacing: 0.18em; }
+.featured-ep__num { font-size: 0.95rem; letter-spacing: 0.18em; }
+.player__time { font-size: 0.95rem; letter-spacing: 0.12em; }
+.listen-card__status { font-size: 0.88rem; letter-spacing: 0.14em; }
+.footer-note { font-size: 0.9rem; letter-spacing: 0.06em; }
+.hero__tagline, .open__tagline { letter-spacing: 0.16em; font-weight: 400; }
+
+/* ==========================================================================
+   Reforço da identidade — superfícies com o gradiente da arte e o contorno
+   do logo (letra branca + contorno preto), no lugar dos cards neutros.
+   ========================================================================== */
+
+/* Contorno "cartaz" do logo, aplicável a títulos. */
+.outlined {
+  color: var(--white);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 4px 5px 0 var(--ink);
+}
+
+/* Cards de plataforma e destaque ganham o roxo da arte, não cinza neutro. */
+.listen-card {
+  background:
+    radial-gradient(130% 160% at 0% 0%, rgba(166, 77, 214, 0.22), transparent 60%),
+    var(--surface);
+}
+.listen-card--live {
+  background:
+    radial-gradient(130% 160% at 0% 0%, rgba(195, 0, 227, 0.4), transparent 62%),
+    var(--surface);
+}
+.platform-chip {
+  background:
+    radial-gradient(120% 200% at 0% 0%, rgba(166, 77, 214, 0.28), transparent 65%),
+    var(--surface-2);
+}
+.platform-chip--live {
+  background:
+    radial-gradient(120% 200% at 0% 0%, rgba(195, 0, 227, 0.45), transparent 68%),
+    var(--surface-2);
+}
+
+/* Título do episódio em destaque com o contorno da marca. */
+.featured-ep__title {
+  color: var(--white);
+  text-shadow: 3px 4px 0 var(--ink);
+}
+.featured-ep__num,
+.ep-card__num {
+  color: var(--cast-pink);
+}
