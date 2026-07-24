@@ -47,14 +47,56 @@
       <section class="page-hero">
         <div class="container">
           <span class="eyebrow">Episódios</span>
-          <h1>Em breve</h1>
+          <h1>Episódios</h1>
           <p>
-            O canal ainda não foi publicado. Assim que os primeiros episódios
-            forem ao ar, a lista completa aparece aqui. Enquanto isso, volte pra
-            <a href="index.html" style="color: var(--cast-pink); font-weight: 700"
-              >Home</a
-            >.
+            Todo papo do Resenha Cast fica reunido aqui. O canal ainda não foi
+            ao ar — assim que os primeiros episódios saírem, eles aparecem nesta
+            página. Enquanto isso, dá pra
+            <a href="contato.html">colar de convidado ou fechar parceria</a>.
           </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <!-- Grid de episódios. Os cards "Em breve" abaixo são o estado atual
+               (canal ainda não publicado) e funcionam mesmo sem JS. Assim que
+               houver itens em assets/episodes.js, o script substitui estes
+               placeholders pelos episódios reais. -->
+          <div class="episodes-grid" id="episodes">
+            <article class="ep-card">
+              <span class="ep-card__tag">Em breve</span>
+              <div class="ep-card__thumb">
+                <span class="ep-card__placeholder">EP 01</span>
+              </div>
+              <div class="ep-card__bar">
+                <span class="ep-card__num">Episódio 01</span>
+                <h3 class="ep-card__title">Em breve</h3>
+              </div>
+            </article>
+
+            <article class="ep-card">
+              <span class="ep-card__tag">Em breve</span>
+              <div class="ep-card__thumb">
+                <span class="ep-card__placeholder">EP 02</span>
+              </div>
+              <div class="ep-card__bar">
+                <span class="ep-card__num">Episódio 02</span>
+                <h3 class="ep-card__title">Em breve</h3>
+              </div>
+            </article>
+
+            <article class="ep-card">
+              <span class="ep-card__tag">Em breve</span>
+              <div class="ep-card__thumb">
+                <span class="ep-card__placeholder">EP 03</span>
+              </div>
+              <div class="ep-card__bar">
+                <span class="ep-card__num">Episódio 03</span>
+                <h3 class="ep-card__title">Em breve</h3>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
     </main>
@@ -78,6 +120,7 @@
     </footer>
 
     <script src="assets/main.js"></script>
+    <script src="assets/episodes.js"></script>
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
